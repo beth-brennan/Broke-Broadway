@@ -7,7 +7,7 @@ import Button from '../components/Button'
 export default function Dashboard({ navigation }) {
   return (
     <Background>
-      <Header>Broke Broadway</Header>
+      <Header>Broadway for Broke People</Header>
       <Paragraph>
         See more shows, spend less money!
       </Paragraph>

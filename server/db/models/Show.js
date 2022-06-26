@@ -11,7 +11,7 @@ const Show = db.define('show', {
     }
   },
   type: {
-    type: Sequelize.ENUM("play", "musical", "other")
+    type: Sequelize.ENUM("Play", "Musical", "Other")
   },
   image: {
     type: Sequelize.STRING,

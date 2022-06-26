@@ -7,7 +7,7 @@ import Paragraph from '../components/Paragraph'
 export default function StartScreen({ navigation }) {
   return (
     <Background>
-      <Header>Broke Broadway</Header>
+      <Header>Broadway for Broke People</Header>
       <Paragraph>
         See more shows, spend less money!
       </Paragraph>

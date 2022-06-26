@@ -6,8 +6,8 @@ const TicketOption = require('../server/db/models/TicketOption');
 
 const aladdin = {
     name: 'Aladdin',
-    type: 'musical',
-    image: 'https://www.broadway.org/logos/shows/aladdin_poster-july-2021.jpg',
+    type: 'Musical',
+    image: 'https://dj1gd759w71sg.cloudfront.net/content/uploads/2021/04/ALD_SocialShareIcon_v3.jpeg',
     website: 'http://www.aladdinthemusical.com/',
     open_date: '2014-02-26',
     close_date: null,
@@ -17,8 +17,8 @@ const aladdin = {
 };
 const beetlejuice = {
     name: 'Beetlejuice',
-    type: 'musical',
-    image: 'https://www.broadway.org/logos/shows/beetlejuice-2021.png',
+    type: 'Musical',
+    image: 'https://beetlejuicebroadway.com/_img/preview-FB.jpg',
     website: 'https://beetlejuicebroadway.com/',
     open_date: '2022-07-10',
     close_date: null,
@@ -28,8 +28,8 @@ const beetlejuice = {
 };
 const comefromaway = {
     name: 'Come From Away',
-    type: 'musical',
-    image: 'https://www.broadway.org/logos/shows/come-from-away_poster-july-2021.jpg',
+    type: 'Musical',
+    image: 'https://www.mtishows.com/sites/default/files/show/hero/000501_hero.jpg',
     website: 'https://comefromaway.com/',
     open_date: '2017-02-18',
     close_date: '2022-10-02',
@@ -39,8 +39,8 @@ const comefromaway = {
 };
 const drive = {
     name: 'How I Learned to Drive',
-    type: 'play',
-    image: 'https://www.broadway.org/logos/shows/how-i-learned_poster-july-2021.jpg',
+    type: 'Play',
+    image: 'https://i.ytimg.com/vi/Xkx9Yj0sdSk/maxresdefault.jpg',
     website: 'https://www.manhattantheatreclub.com/shows/2021-22-season/how-i-learned-to-drive/',
     open_date: '2022-03-29',
     close_date: '2022-07-10',
@@ -50,8 +50,8 @@ const drive = {
 };
 const hamilton = {
     name: 'Hamilton',
-    type: 'musical',
-    image: 'https://www.broadway.org/logos/shows/hamilton_poster-july-2021.jpg',
+    type: 'Musical',
+    image: 'https://www.victoriapalacetheatre.co.uk/imgs/shows/hamilton/generic/hamilton-title-treatment-large.jpg',
     website: 'https://hamiltonmusical.com/new-york/home/',
     open_date: '2015-07-13',
     close_date: null,
@@ -61,8 +61,8 @@ const hamilton = {
 };
 const cursed = {
     name: 'Harry Potter and the Cursed Child',
-    type: 'play',
-    image: 'https://www.broadway.org/logos/shows/harrypotter_poster_july-2021.jpg',
+    type: 'Play',
+    image: 'https://broadway.harrypottertheplay.com/content/uploads/2022/05/HP22_1640x856-compressed.jpg',
     website: 'https://broadway.harrypottertheplay.com/',
     open_date: '2018-03-16',
     close_date: null,
@@ -70,21 +70,10 @@ const cursed = {
     address1: '213 W. 42nd St',
     address2: 'between 7th and 8th'
 };
-const macbeth = {
-    name: 'Macbeth',
-    type: 'play',
-    image: 'https://macbethbroadway.com/',
-    website: 'https://www.broadway.org/logos/shows/macbeth_2021.jpg',
-    open_date: '2022-03-29',
-    close_date: '2022-07-10',
-    theater: 'Longacre',
-    address1: '220 W. 48th St',
-    address2: 'between 7th and 8th'
-};
 const moulin = {
     name: 'Moulin Rouge!',
-    type: 'musical',
-    image: 'https://www.broadway.org/logos/shows/moulinrouge_poster-july-2021.jpg',
+    type: 'Musical',
+    image: 'https://moulinrougemusical.com/wp-content/uploads/2021/01/MOULIN_ROUGE_HORIZONTAL-1200x628-1.jpg',
     website: 'https://moulinrougemusical.com/new-york/home/',
     open_date: '2019-06-28',
     close_date: null,
@@ -94,8 +83,8 @@ const moulin = {
 };
 const akimbo = {
     name: 'Kimberly Akimbo',
-    type: 'musical',
-    image: 'https://www.broadway.org/logos/shows/kimberlyakimbo_v2.jpg',
+    type: 'Musical',
+    image: 'https://assets.playbill.com/playbill-covers/_1200x630_crop_center-center_82_none/kimberly-akimbo.png?mtime=1655413065',
     website: 'https://kimberlyakimbothemusical.com/',
     open_date: '2022-11-10',
     close_date: null,
@@ -181,8 +170,8 @@ async function seed() {
 
   // Creating Users
   const usersCreated = await Promise.all([
-    User.create({ email: 'cody@cody.com', password: '123' }),
-    User.create({ email: 'murphy@murphy.com', password: '123' }),
+    User.create({ email: 'cody@cody.com', password: '12345' }),
+    User.create({ email: 'murphy@murphy.com', password: '12345' }),
   ])
 
   // Creating Shows
@@ -193,7 +182,6 @@ const hamiltonShow = await Show.create(hamilton);
 const cursedShow = await Show.create(cursed);
 const moulinShow = await Show.create(moulin);
 await Show.create(beetlejuice);
-await Show.create(macbeth);
 await Show.create(akimbo);
 
 // Creating Ticket Options
@@ -219,6 +207,10 @@ await driveTicket3.setShow(driveShow);
 await hamiltonTicket.setShow(hamiltonShow);
 await cursedTicket.setShow(cursedShow);
 await moulinTicket.setShow(moulinShow);
+
+// Adding favorites
+await usersCreated[0].setShows([aladdinShow, hamiltonShow, moulinShow])
+await usersCreated[1].setShows([comefromawayShow, driveShow, cursedShow])
 
   console.log(`seeded successfully`)
   return {

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import {connect} from 'react-redux';
 import { TouchableOpacity, StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
@@ -9,10 +10,14 @@ import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
+import { authenticate } from '../../../store/auth';
+import { useNavigation } from '@react-navigation/native';
 
-export default function LoginScreen({ navigation }) {
+
+function LoginScreen(props) {
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
+  const navigation = useNavigation();
 
   const onLoginPressed = () => {
     const emailError = emailValidator(email.value)
@@ -22,10 +27,8 @@ export default function LoginScreen({ navigation }) {
       setPassword({ ...password, error: passwordError })
       return
     }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Dashboard' }],
-    })
+    props.authenticate(email, password, 'login');
+    navigation.navigate('All Shows');
   }
 
   return (
@@ -92,3 +95,11 @@ const styles = StyleSheet.create({
     color: theme.colors.primary,
   },
 })
+
+const mapDispatch = dispatch => {
+  return {
+    authenticate: (email, password, formName) => dispatch(authenticate(email, password, formName))
+  }
+}
+
+export default connect(null, mapDispatch)(LoginScreen);
