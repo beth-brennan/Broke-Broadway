@@ -3,39 +3,50 @@ import React from 'react';
 import { StyleSheet, View, Image, ScrollView, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import { Appbar, Text, Button, Card, Title, Paragraph, Divider, List, IconButton } from 'react-native-paper';
-import { fetchFavoriteShows } from '../store/shows';
+import { deleteFavorite, fetchFavoriteShows } from '../store/favorites';
 
 class Favorites extends React.Component {
   constructor() {
     super();
     this.state = {
-      favorite: false
+      favorites: []
     }
     this.handlePress = this.handlePress.bind(this);
   }
 
   componentDidMount() {
-    this.props.loadFavorites(this.props.auth.id);
+      this.props.loadFavorites(1);
+      this.setState({ favorites: this.props.favorites });
   }
 
-  handlePress() {
-    this.setState({favorite: !this.state.favorite})
+  componentDidUpdate(prevProps) {
+    if (prevProps.favorites.length != this.props.favorites.length) {
+      this.props.loadFavorites(1);
+      this.setState({ favorites: this.props.favorites });
+    }
+  }
+
+  handlePress(showId) {
+    this.props.deleteFavorite(1, showId);
+    this.setState({ favorites: this.props.favorites });
   }
 
   render() {
     return (
       <SafeAreaView style={styles.container}>
-      <Title>My Favorites</Title>
+        <Appbar.Header>
+          <Appbar.Content title="Favorites" />
+        </Appbar.Header>
       <ScrollView>
-        {this.props.shows ? (
-          this.props.shows.map(show => {
+        {this.state.favorites ? (
+          this.state.favorites.map(show => {
             return (
               <Card key={show.id} style={styles.card} mode='outlined'>
                 <Card.Cover source={{uri: show.image}} />
                 <Card.Title
                 title={show.name}
                 subtitle={show.type}
-                right={() => <IconButton icon={this.state.favorite ? "star" : "star-outline"} onPress={this.handlePress} />}
+                right={() => <IconButton icon={this.state.favorites.includes(show) ? "star" : "star-outline"} onPress={() => this.handlePress(show.id)} />}
                   />
                 <Card.Actions>
                   <Button>View Ticket Options</Button>
@@ -54,13 +65,15 @@ class Favorites extends React.Component {
 const mapState = (state) => {
   return {
     auth: state.auth,
-    shows: state.shows
+    favorites: state.favorites,
+    isLoggedIn: !!state.auth.id,
   }
 }
 
 const mapProps = (dispatch) => {
   return {
-    loadFavorites: () => dispatch(fetchFavoriteShows())
+    loadFavorites: (id) => dispatch(fetchFavoriteShows(id)),
+    deleteFavorite: (userId, showId) => dispatch(deleteFavorite(userId, showId))
   }
 }
 

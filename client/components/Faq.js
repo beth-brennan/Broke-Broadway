@@ -6,27 +6,11 @@ import Favorites from "./Favorites";
 import Account from "./Account";
 
 export default function Faq({ navigation }) {
-  // const [index, setIndex] = React.useState(0);
-  // const [routes] = React.useState([
-  //   { key: 'shows', title: 'All Shows', focusedIcon: 'drama-masks'},
-  //   { key: 'favorites', title: 'Favorites', focusedIcon: 'star', unfocusedIcon: 'star-outline' },
-  //   { key: 'faq', title: 'FAQ', focusedIcon: 'frequently-asked-questions' },
-  //   { key: 'account', title: 'Account', focusedIcon: 'account-circle', unfocusedIcon: 'account-circle-outline' },
-  // ]);
-
-  // const renderScene = ({ route, jumpTo }) => {
-  //   switch (route.key) {
-  //     case 'shows':
-  //       return <AllShows jumpTo={jumpTo} />;
-  //     case 'favorites':
-  //       return <Favorites jumpTo={jumpTo} />;
-  //     case 'account':
-  //       return <Account jumpTo={jumpTo} />;
-  //   }
-  // }
-
   return (
     <View style={styles.container}>
+      <Appbar.Header>
+        <Appbar.Content title="Frequently Asked Questions" />
+      </Appbar.Header>
       <ScrollView>
         <List.AccordionGroup>
           <List.Accordion title="What is a rush ticket?" id="1">
@@ -57,29 +41,6 @@ export default function Faq({ navigation }) {
           </List.Accordion>
         </List.AccordionGroup>
       </ScrollView>
-      {/* <BottomNavigation
-        navigationState={{ index, routes }}
-        onIndexChange={setIndex}
-        renderScene={renderScene}
-      /> */}
-      <Appbar style={styles.bottom}>
-        <Appbar.Action
-          color="#C0C0C0"
-          icon="drama-masks"
-          onPress={() => navigation.navigate('All Shows')}
-        />
-        <Appbar.Action
-          color="#C0C0C0"
-          icon="star"
-          onPress={() => navigation.navigate('Favorites')}
-        />
-        <Appbar.Action icon="frequently-asked-questions" />
-        <Appbar.Action
-          color="#C0C0C0"
-          icon="account-circle"
-          onPress={() => navigation.navigate('Account')}
-        />
-      </Appbar>
     </View>
   );
 }

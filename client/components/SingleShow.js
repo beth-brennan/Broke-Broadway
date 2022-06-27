@@ -1,138 +1,87 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
-import { StyleSheet, View, Image, SafeAreaView, TouchableHighlight, Alert, Button, ScrollView } from 'react-native';
+import { StyleSheet, View, Image, SafeAreaView, TouchableHighlight, Alert, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import { fetchAllShows } from '../store/shows';
-import { fetchOneShow } from '../store/singleShow';
-import { Appbar, Text } from 'react-native-paper';
+import { Appbar, Text, Card, IconButton, Paragraph, Button } from 'react-native-paper';
+import * as WebBrowser from 'expo-web-browser';
 
 class SingleShow extends React.Component {
-  componentDidMount() {
-    this.props.loadShows();
-  }
-
   render() {
-    const show = this.props.shows[0];
+    const show = this.props.singleShow;
     return (
-    <ScrollView>
-      <Appbar.Header>
-        <Appbar.BackAction />
-        <Appbar.Content title="Broke Broadway" />
-      </Appbar.Header>
-      <SafeAreaView style={styles.body}>
-        <Image
-          style={styles.image}
-          source={{ uri: 'https://www.broadway.org/logos/shows/aladdin_poster-july-2021.jpg' }}
-        />
-        <Text variant="headlineLarge">Aladdin</Text>
-        <Text variant="titleMedium">New Amsterdam</Text>
-        <Text variant="titleSmall">214 W. 42nd St</Text>
-        <Text variant="titleSmall">between 7th and 8th</Text>
+      <SafeAreaView style={styles.container}>
+        <Appbar.Header>
+          <Appbar.BackAction onPress={this.props.navigation.goBack}/>
+        </Appbar.Header>
+        <ScrollView>
+        <Card mode='outlined'>
+          <Card.Cover source={{uri: show.image}} />
+            <Card.Title
+              title={show.name}
+              subtitle={show.type}
+              right={() => <IconButton icon="star" />}
+            />
+            <Card.Content>
+              <Paragraph style={styles.theater}>{show.theater}</Paragraph>
+              <Paragraph style={styles.address}>{show.address1}</Paragraph>
+              <Paragraph style={styles.address}>{show.address2}</Paragraph>
+            </Card.Content>
+            <Card.Actions>
+              <Button onPress={() => WebBrowser.openBrowserAsync(show.website)}>Visit site</Button>
+            </Card.Actions>
+          </Card>
+          {show.ticketoptions && show.ticketoptions.length > 0 ? (
+            show.ticketoptions.map(option => {
+              return (
+                <Card mode='outlined' key={option.id} style={styles.card}>
+                  <Card.Title title={`${option.type}: $${option.price}`} />
+                  <Card.Content>
+                    <Paragraph>{option.restrictions}</Paragraph>
+                  </Card.Content>
+                  {option.link ? (
+                    <Card.Actions>
+                      <Button onPress={() => WebBrowser.openBrowserAsync(option.link)}>Click to Enter</Button>
+                    </Card.Actions>
+                  ) : (<Button></Button>)}
+                </Card>)
+            })
+          ) : (
+            <Paragraph style={styles.paragraph}>Unfortunately, there are no rush, lottery, or SRO policies currently announced for this show. Please check back later!
+            </Paragraph>
+          )}
+        </ScrollView>
       </SafeAreaView>
-      <Appbar style={styles.bottom}>
-        <Appbar.Action
-        icon="archive"
-        onPress={() => console.log('Pressed archive')}
-        />
-        <Appbar.Action icon="mail" onPress={() => console.log('Pressed mail')} />
-        <Appbar.Action icon="label" onPress={() => console.log('Pressed label')} />
-        <Appbar.Action
-          icon="delete"
-          onPress={() => console.log('Pressed delete')}
-        />
-      </Appbar>
-    </ScrollView>
   );
   }
 
 }
 
-
-
-
-
-// function SingleShow(props) {
-//   useEffect(() => {
-//     props.loadShows();
-//   });
-
-//   const show = props.show[0];
-//   return (
-//     <ScrollView>
-//       <Appbar.Header>
-//         <Appbar.BackAction />
-//         <Appbar.Content title="Broke Broadway" />
-//       </Appbar.Header>
-//       <SafeAreaView style={styles.body}>
-//         <Image
-//           style={styles.image}
-//           source={{ uri: 'https://www.broadway.org/logos/shows/aladdin_poster-july-2021.jpg' }}
-//         />
-//         <Text variant="headlineLarge">Aladdin</Text>
-//         <Text variant="titleMedium">New Amsterdam</Text>
-//         <Text variant="titleSmall">214 W. 42nd St</Text>
-//         <Text variant="titleSmall">between 7th and 8th</Text>
-//       </SafeAreaView>
-//       <Appbar style={styles.bottom}>
-//         <Appbar.Action
-//         icon="archive"
-//         onPress={() => console.log('Pressed archive')}
-//         />
-//         <Appbar.Action icon="mail" onPress={() => console.log('Pressed mail')} />
-//         <Appbar.Action icon="label" onPress={() => console.log('Pressed label')} />
-//         <Appbar.Action
-//           icon="delete"
-//           onPress={() => console.log('Pressed delete')}
-//         />
-//       </Appbar>
-//     </ScrollView>
-//   );
-// }
-
 const mapState = (state) => {
-  console.log(state);
   return {
-    shows: state.shows
-  }
-}
-
-const mapProps = (dispatch) => {
-  return {
-    loadShows: () => dispatch(fetchAllShows())
+    singleShow: state.singleShow
   }
 }
 
 const styles = StyleSheet.create({
-  header: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-  },
-  body: {
-    paddingTop: 50,
-    paddingBottom: 50,
+  container: {
     width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: '100%'
   },
-  text: {
-    color: 'black',
-    fontSize: 20,
-    fontStyle: 'italic',
-    margin: 10
+  theater: {
+    fontWeight: 'bold'
   },
-  image: {
-    width: 200,
-    height: 200
+  address: {
+    fontStyle: 'italic'
   },
-  bottom: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
+  card: {
+    backgroundColor: '#D8D6D8'
+  },
+  paragraph: {
+    fontWeight: 'bold',
+    padding: 20,
+    textAlign: 'center',
+    fontSize: 18
   },
 });
 
-export default connect(mapState, mapProps)(SingleShow);
+export default connect(mapState)(SingleShow);

@@ -10,7 +10,7 @@ import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
-import { authenticate } from '../../../store/auth';
+import { unsecureLogin } from '../../../store/auth';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -27,8 +27,8 @@ function LoginScreen(props) {
       setPassword({ ...password, error: passwordError })
       return
     }
-    props.authenticate(email, password, 'login');
-    navigation.navigate('All Shows');
+    props.login(email.value, password.value);
+    navigation.navigate('Content', { screen: 'Shows', params: { screen: 'All Shows'} });
   }
 
   return (
@@ -62,6 +62,7 @@ function LoginScreen(props) {
         >
           <Text style={styles.forgot}>Forgot your password?</Text>
         </TouchableOpacity>
+        {props.error && props.error.response && <Text> {props.error.response.data}</Text>}
       </View>
       <Button mode="contained" onPress={onLoginPressed}>
         Login
@@ -96,10 +97,17 @@ const styles = StyleSheet.create({
   },
 })
 
-const mapDispatch = dispatch => {
+const mapState = state => {
   return {
-    authenticate: (email, password, formName) => dispatch(authenticate(email, password, formName))
+    auth: state.auth,
+    error: state.auth.error
   }
 }
 
-export default connect(null, mapDispatch)(LoginScreen);
+const mapDispatch = dispatch => {
+  return {
+    login: (email, password) => dispatch(unsecureLogin(email, password))
+  }
+}
+
+export default connect(mapState, mapDispatch)(LoginScreen);

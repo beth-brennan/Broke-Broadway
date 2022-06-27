@@ -97,14 +97,14 @@ const aladdinLottery = {
   type: 'Digital Lottery',
   price: 30,
   restrictions: 'Credit card only. Enter at  from 7 PM the day before until 8:30 AM on the day of the performance. Winners will have 60 minutes to pay for their tickets online. 2 tickets per person.',
-  link: 'lottery.broadwaydirect.com/show/aladdin'
+  link: 'https://lottery.broadwaydirect.com/show/aladdin'
 };
 
 const comeFromAwayLottery = {
   type: 'Digital Lottery',
   price: 53,
   restrictions: 'Credit card only. Available for Tuesday, Wednesday, and Thursday performances. Enter two days before the performance, up to 10 AM for matinees and 3 PM for evenings. 2 tickets per person.',
-  link: 'www.comefromawaylottery.com'
+  link: 'https://www.comefromawaylottery.com'
 };
 
 const comeFromAwayRush = {
@@ -129,7 +129,7 @@ const driveRush = {
   type: "Digital Rush",
   price: 35,
   restrictions: 'Credit card only. Available via TodayTix mobile app from 10 AM until sold out. 2 tickets per person.',
-  link: 'todaytix.com'
+  link: 'https://todaytix.com'
 };
 
 const driveYoung = {
@@ -143,21 +143,21 @@ const hamiltonLottery = {
   type: "Digital Lottery",
   price: 10,
   restrictions: 'Enter beginning at 10am Friday the week before the performance until 12pm Thursday the week before the performance. Winners are notified between 12pm and 4pm Thursday the week before the performance. Winners have 2 hours to purchase tickets. 2 tickets per person.',
-  link: 'HamiltonBroadway.com/lottery'
+  link: 'https://HamiltonBroadway.com/lottery'
 };
 
 const cursedLottery = {
   type: "Digital Lottery",
   price: 40,
   restrictions: 'Credit card only. Lottery tickets are only sold for both parts together. Enter via TodayTix mobile app beginning at 12:01 AM on Friday until 1pm for performances the following week. Winners are notified via push notification and email by 5pm Friday. Winners will have 60 minutes to pay for their tickets online. 2 tickets per person.',
-  link: 'todaytix.com'
+  link: 'https://todaytix.com'
 };
 
 const moulinLottery = {
   type: "Digital Lottery",
   price: 34,
   restrictions: 'Credit card only. Enter beginning two days prior until 10am the day before the performance. Winners are notified by 11am the day before the performance. Tickets must be purchased by 3pm the day before the performance. 2 tickets per person.',
-  link: 'www.luckyseat.com/shows/moulinrouge!themusical-newyork'
+  link: 'https://www.luckyseat.com/shows/moulinrouge!themusical-newyork'
 };
 
 /**

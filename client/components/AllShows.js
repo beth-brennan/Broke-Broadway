@@ -4,6 +4,7 @@ import { StyleSheet, View, Image, ScrollView, SafeAreaView } from 'react-native'
 import { connect } from 'react-redux';
 import { fetchAllShows } from '../store/shows';
 import { Appbar, Text, Button, Card, Title, Paragraph, Divider, List, IconButton } from 'react-native-paper';
+import { fetchOneShow } from '../store/singleShow';
 
 class AllShows extends React.Component {
   constructor() {
@@ -22,14 +23,20 @@ class AllShows extends React.Component {
     this.setState({favorite: !this.state.favorite})
   }
 
+  handleChangeScreens(id) {
+    this.props.loadSingleShow(id);
+    this.props.navigation.navigate('Single Show')
+  }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
+        <Appbar.Header />
         <ScrollView>
           {this.props.shows ? (
             this.props.shows.map(show => {
               return (
-                <Card key={show.id} style={styles.card} mode='outlined'>
+                <Card key={show.id} mode='outlined'>
                   <Card.Cover source={{uri: show.image}} />
                   <Card.Title
                   title={show.name}
@@ -37,7 +44,7 @@ class AllShows extends React.Component {
                   right={() => <IconButton icon={this.state.favorite ? "star" : "star-outline"} onPress={this.handlePress} />}
                     />
                   <Card.Actions>
-                    <Button>View Ticket Options</Button>
+                    <Button onPress={() => this.handleChangeScreens(show.id)}>View Ticket Options</Button>
                   </Card.Actions>
                 </Card>
             )})
@@ -53,13 +60,15 @@ class AllShows extends React.Component {
 
 const mapState = (state) => {
   return {
-    shows: state.shows
+    shows: state.shows,
+    singleShow: state.singleShow
   }
 }
 
 const mapProps = (dispatch) => {
   return {
-    loadShows: () => dispatch(fetchAllShows())
+    loadShows: () => dispatch(fetchAllShows()),
+    loadSingleShow: (id) => dispatch(fetchOneShow(id))
   }
 }
 
@@ -67,11 +76,6 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%'
-  },
-  card: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
   }
 });
 
