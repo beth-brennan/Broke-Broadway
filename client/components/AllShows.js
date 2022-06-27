@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, View, Image, ScrollView, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import { fetchAllShows } from '../store/shows';
-import { Appbar, Text, Button, Card, Title, Paragraph, Divider, List, IconButton } from 'react-native-paper';
+import { Appbar, Text, Button, Card, Title, Paragraph, Divider, List, IconButton, ToggleButton } from 'react-native-paper';
 import { fetchOneShow } from '../store/singleShow';
 import { deleteFavorite, fetchFavoriteShows, setFavorite } from '../store/favorites';
 
@@ -11,15 +11,20 @@ class AllShows extends React.Component {
   constructor() {
     super();
     this.state = {
-      favorites: []
+      favorites: [],
+      // shows: [],
+      // filter: "All"
     }
     this.handlePress = this.handlePress.bind(this);
+    this.handleChangeScreens = this.handleChangeScreens.bind(this);
+    // this.handleChange = this.handleChange.bind(this);
+    // this.handleFilter = this.handleFilter.bind(this);
   }
 
   componentDidMount() {
     this.props.loadShows();
     this.props.loadFavorites(1);
-    this.setState({ favorites: this.props.favorites });
+    this.setState({ shows: this.props.shows });
   }
 
   componentDidUpdate(prevProps) {
@@ -44,10 +49,39 @@ class AllShows extends React.Component {
     this.props.navigation.navigate('Single Show')
   }
 
+  // handleChange(filter) {
+  //   this.setState({filter});
+  // }
+
+  // handleFilter() {
+  //   const today = new Date();
+  //   const closingSoonDate = new Date()+14;
+  //   if (this.state.filter === "All") {
+  //     this.setState({ shows: this.props.shows });
+  //   } else if (this.state.filter === "Current") {
+  //     const currentShows = this.props.shows.filter(show => show.open_date <= today);
+  //     this.setState({ shows: currentShows });
+  //   } else if (this.state.filter === "Upcoming") {
+  //     const upcomingShows = this.props.shows.filter(show => show.open_date > today);
+  //     this.setState({ shows: upcomingShows });
+  //   } else if (this.state.filter === "Closing Soon") {
+  //     const closingSoon = this.props.shows.filter(show => show.close_date < closingSoonDate);
+  //     this.setState({ shows: closingSoon });
+  //   }
+  // }
+
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <Appbar.Header />
+        <Appbar.Header>
+          <Appbar.Content title="Broadway for Broke People" />
+        </Appbar.Header>
+        {/* <ToggleButton.Row onValueChange={() => this.handleFilter()} value={this.state.filter}>
+        <ToggleButton value="All" onPress={() => this.handleChange("All")}>All</ToggleButton>
+          <ToggleButton value="Current" onPress={() => this.handleChange("Current")}>Current</ToggleButton>
+          <ToggleButton value="Upcoming"  onPress={() => this.handleChange("Upcoming")}>Upcoming</ToggleButton>
+          <ToggleButton value="Closing Soon" onPress={() => this.handleChange("Closing Soon")}>Closing Soon</ToggleButton>
+        </ToggleButton.Row> */}
         <ScrollView>
           {this.props.shows ? (
             this.props.shows.map(show => {
