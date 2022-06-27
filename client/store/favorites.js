@@ -5,6 +5,7 @@ import axios from 'axios'
  */
 const GET_FAVORITE_SHOWS = 'GET_FAVORITE_SHOWS';
 const REMOVE_FAVORITE = 'REMOVE_FAVORITE';
+const ADD_FAVORITE = 'ADD_FAVORITE';
 
 /**
  * ACTION CREATORS
@@ -24,6 +25,13 @@ const removeFavorite = (favorites) => {
   }
 }
 
+const addFavorite = (favorites) => {
+  return {
+    type: ADD_FAVORITE,
+    favorites
+  }
+}
+
 /**
  * THUNK CREATORS
  */
@@ -37,8 +45,15 @@ export const fetchFavoriteShows = (id) => {
 
 export const deleteFavorite = (userId, showId) => {
   return async (dispatch) => {
-    const {data} = await axios.put(`http://localhost:8080/api/shows/${userId}/${showId}/remove`);
+    const {data} = await axios.put(`http://localhost:8080/api/shows/remove/${userId}/${showId}`);
     dispatch(removeFavorite(data));
+  }
+}
+
+export const setFavorite = (userId, showId) => {
+  return async (dispatch) => {
+    const {data} = await axios.put(`http://localhost:8080/api/shows/set/${userId}/${showId}`);
+    dispatch(addFavorite(data));
   }
 }
 
@@ -50,6 +65,8 @@ export default function(state = [], action) {
     case GET_FAVORITE_SHOWS:
       return action.favorites;
     case REMOVE_FAVORITE:
+      return action.favorites;
+    case ADD_FAVORITE:
       return action.favorites;
     default:
       return state

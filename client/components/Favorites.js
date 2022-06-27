@@ -38,7 +38,7 @@ class Favorites extends React.Component {
           <Appbar.Content title="Favorites" />
         </Appbar.Header>
       <ScrollView>
-        {this.state.favorites ? (
+        {this.state.favorites && this.state.favorites.length > 0 ? (
           this.state.favorites.map(show => {
             return (
               <Card key={show.id} style={styles.card} mode='outlined'>
@@ -54,7 +54,7 @@ class Favorites extends React.Component {
               </Card>
           )})
           ): (
-            <Text>You have not marked any shows as favorites!</Text>
+            <Paragraph style={styles.paragraph}>You have not marked any shows as favorites!</Paragraph>
             )}
     </ScrollView>
   </SafeAreaView>
@@ -66,7 +66,6 @@ const mapState = (state) => {
   return {
     auth: state.auth,
     favorites: state.favorites,
-    isLoggedIn: !!state.auth.id,
   }
 }
 
@@ -86,7 +85,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between'
-  }
+  },
+  paragraph: {
+    fontWeight: 'bold',
+    padding: 20,
+    textAlign: 'center',
+    fontSize: 18
+  },
 });
 
 export default connect(mapState, mapProps)(Favorites);

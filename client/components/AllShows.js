@@ -5,22 +5,38 @@ import { connect } from 'react-redux';
 import { fetchAllShows } from '../store/shows';
 import { Appbar, Text, Button, Card, Title, Paragraph, Divider, List, IconButton } from 'react-native-paper';
 import { fetchOneShow } from '../store/singleShow';
+import { deleteFavorite, fetchFavoriteShows, setFavorite } from '../store/favorites';
 
 class AllShows extends React.Component {
   constructor() {
     super();
     this.state = {
-      favorite: false
+      favorites: []
     }
     this.handlePress = this.handlePress.bind(this);
   }
 
   componentDidMount() {
     this.props.loadShows();
+    this.props.loadFavorites(1);
+    this.setState({ favorites: this.props.favorites });
   }
 
-  handlePress() {
-    this.setState({favorite: !this.state.favorite})
+  componentDidUpdate(prevProps) {
+    if (prevProps.favorites.length != this.props.favorites.length) {
+      this.props.loadFavorites(1);
+      this.setState({ favorites: this.props.favorites });
+    }
+  }
+
+  handlePress(show) {
+    if (this.state.favorites.filter(fav => fav.id === show.id).length > 0) {
+      this.props.deleteFavorite(1, show.id);
+      this.setState({ favorites: this.props.favorites });
+    } else {
+      this.props.setFavorite(1, show.id);
+      this.setState({ favorites: this.props.favorites });
+    }
   }
 
   handleChangeScreens(id) {
@@ -41,7 +57,8 @@ class AllShows extends React.Component {
                   <Card.Title
                   title={show.name}
                   subtitle={show.type}
-                  right={() => <IconButton icon={this.state.favorite ? "star" : "star-outline"} onPress={this.handlePress} />}
+                  right={() => <IconButton
+                      icon={this.state.favorites.filter(fav => fav.id === show.id).length > 0 ? "star" : "star-outline"} onPress={() => this.handlePress(show)} />}
                     />
                   <Card.Actions>
                     <Button onPress={() => this.handleChangeScreens(show.id)}>View Ticket Options</Button>
@@ -49,7 +66,7 @@ class AllShows extends React.Component {
                 </Card>
             )})
             ): (
-              <Text>There are no shows! Please check back later!</Text>
+              <Paragraph style={styles.paragraph}>There are no shows! Please check back later!</Paragraph>
               )}
       </ScrollView>
     </SafeAreaView>
@@ -61,14 +78,19 @@ class AllShows extends React.Component {
 const mapState = (state) => {
   return {
     shows: state.shows,
-    singleShow: state.singleShow
+    singleShow: state.singleShow,
+    auth: state.auth,
+    favorites: state.favorites
   }
 }
 
 const mapProps = (dispatch) => {
   return {
     loadShows: () => dispatch(fetchAllShows()),
-    loadSingleShow: (id) => dispatch(fetchOneShow(id))
+    loadSingleShow: (id) => dispatch(fetchOneShow(id)),
+    loadFavorites: (id) => dispatch(fetchFavoriteShows(id)),
+    deleteFavorite: (userId, showId) => dispatch(deleteFavorite(userId, showId)),
+    setFavorite: (userId, showId) => dispatch(setFavorite(userId, showId))
   }
 }
 
@@ -76,7 +98,13 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%'
-  }
+  },
+  paragraph: {
+    fontWeight: 'bold',
+    padding: 20,
+    textAlign: 'center',
+    fontSize: 18
+  },
 });
 
 export default connect(mapState, mapProps)(AllShows);

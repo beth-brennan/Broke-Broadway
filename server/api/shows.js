@@ -25,8 +25,8 @@ router.get('/favorites/:id', async (req, res, next) => {
   }
 })
 
-// PUT /api/shows/:userId/:showId/remove
-router.put('/:userId/:showId/remove', async (req, res, next) => {
+// PUT /api/shows/remove/:userId/:showId
+router.put('/remove/:userId/:showId', async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.userId);
     const show = await Show.findByPk(req.params.showId);
@@ -38,12 +38,12 @@ router.put('/:userId/:showId/remove', async (req, res, next) => {
   }
 })
 
-// PUT /api/shows/:userId/:showId/set
-router.put('/:userId/:showId/set', async (req, res, next) => {
+// PUT /api/shows/set/:userId/:showId
+router.put('/set/:userId/:showId', async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.userId);
     const show = await Show.findByPk(req.params.showId);
-    await user.setShow(show);
+    await user.addShow(show);
     const favorites = await user.getShows();
     res.json(favorites);
   } catch (err) {

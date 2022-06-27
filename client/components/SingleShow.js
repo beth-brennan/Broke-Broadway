@@ -4,8 +4,37 @@ import { StyleSheet, View, Image, SafeAreaView, TouchableHighlight, Alert, Scrol
 import { connect } from 'react-redux';
 import { Appbar, Text, Card, IconButton, Paragraph, Button } from 'react-native-paper';
 import * as WebBrowser from 'expo-web-browser';
+import { deleteFavorite, setFavorite } from '../store/favorites';
 
 class SingleShow extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      favorites: []
+    }
+    this.handlePress = this.handlePress.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ favorites: this.props.favorites });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.favorites.length != this.props.favorites.length) {
+      this.setState({ favorites: this.props.favorites });
+    }
+  }
+
+  handlePress(show) {
+    if (this.state.favorites.filter(fav => fav.id === show.id).length > 0) {
+      this.props.deleteFavorite(1, show.id);
+      this.setState({ favorites: this.props.favorites });
+    } else {
+      this.props.setFavorite(1, show.id);
+      this.setState({ favorites: this.props.favorites });
+    }
+  }
+
   render() {
     const show = this.props.singleShow;
     return (
@@ -19,7 +48,8 @@ class SingleShow extends React.Component {
             <Card.Title
               title={show.name}
               subtitle={show.type}
-              right={() => <IconButton icon="star" />}
+              right={() => <IconButton
+                icon={this.state.favorites.filter(fav => fav.id === show.id).length > 0 ? "star" : "star-outline"} onPress={() => this.handlePress(show)} />}
             />
             <Card.Content>
               <Paragraph style={styles.theater}>{show.theater}</Paragraph>
@@ -58,7 +88,16 @@ class SingleShow extends React.Component {
 
 const mapState = (state) => {
   return {
-    singleShow: state.singleShow
+    singleShow: state.singleShow,
+    auth: state.auth,
+    favorites: state.favorites
+  }
+}
+
+const mapProps = (dispatch) => {
+  return {
+    deleteFavorite: (userId, showId) => dispatch(deleteFavorite(userId, showId)),
+    setFavorite: (userId, showId) => dispatch(setFavorite(userId, showId))
   }
 }
 
@@ -84,4 +123,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(mapState)(SingleShow);
+export default connect(mapState, mapProps)(SingleShow);
